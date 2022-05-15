@@ -13,7 +13,7 @@ func main() {
 	var myIPs []net.IP
 	resolver := &net.Resolver{PreferGo: true}
 	if len(os.Args) != 3 {
-		fmt.Fprintf(os.Stderr, "%s requires exactly two cmdline parameters: <name> and <interface>]n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "%s requires exactly two cmdline parameters: <name> and <interface>\n", os.Args[0])
 		os.Exit(1)
 	}
 	inf, err := net.InterfaceByName(os.Args[2])
