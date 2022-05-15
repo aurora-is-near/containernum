@@ -13,7 +13,7 @@ func main() {
 	var myIPs []net.IP
 	resolver := &net.Resolver{PreferGo: true}
 	if len(os.Args) != 3 {
-		fmt.Fprintf(os.Stderr, "%s requires exactly two cmdline parameters: <name> and <interface>\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "%s requires exactly two cmdline parameters: <name> and <interface>]n", os.Args[0])
 		os.Exit(1)
 	}
 	inf, err := net.InterfaceByName(os.Args[2])
@@ -28,11 +28,11 @@ func main() {
 	}
 	myIPs = make([]net.IP, 0, len(myAddrs))
 	for _, a := range myAddrs {
-		addr := net.ParseIP(a.String())
-		if addr == nil {
+		addr, _, err := net.ParseCIDR(a.String())
+		if err != nil || addr == nil {
 			continue
 		}
-		myIPs = append(myIPs, addr)
+		myIPs = append(myIPs, addr.To16())
 	}
 	hostname := os.Args[1]
 	var wg sync.WaitGroup
@@ -50,8 +50,8 @@ func main() {
 			}
 			for _, a := range addrs {
 				for _, b := range myIPs {
-					if a.IP.Equal(b) {
-						fmt.Fprintf(os.Stdout, "%d\n", i)
+					if a.IP.To16().Equal(b) {
+						fmt.Fprintf(os.Stdout, "%d\n", j)
 						os.Exit(0)
 					}
 				}
